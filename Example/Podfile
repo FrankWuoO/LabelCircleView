@@ -1,0 +1,13 @@
+use_frameworks!
+
+platform :ios, '10.0'
+
+target 'LabelCircleView_Example' do
+  pod 'LabelCircleView', :path => '../'
+
+  target 'LabelCircleView_Tests' do
+    inherit! :search_paths
+
+    
+  end
+end
