@@ -1,0 +1,6 @@
+framework module LabelCircleView {
+  umbrella header "LabelCircleView-umbrella.h"
+
+  export *
+  module * { export * }
+}

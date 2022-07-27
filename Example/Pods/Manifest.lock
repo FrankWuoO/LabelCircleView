@@ -1,0 +1,16 @@
+PODS:
+  - LabelCircleView (0.1.0)
+
+DEPENDENCIES:
+  - LabelCircleView (from `../`)
+
+EXTERNAL SOURCES:
+  LabelCircleView:
+    :path: "../"
+
+SPEC CHECKSUMS:
+  LabelCircleView: 3654ea69206f3bf5407db10838fabb292d8feb38
+
+PODFILE CHECKSUM: 3e44481ac7b5bac3f0242b6bbe802f3c61387041
+
+COCOAPODS: 1.11.2
