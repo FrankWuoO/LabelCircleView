@@ -7,12 +7,15 @@
 //
 
 import UIKit
+import LabelCircleView
 
 class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        let circleView = LabelCircleView(text: "120", percent: 0.85, color: UIColor(red: 0, green: 196/255, blue: 1, alpha: 1))
+        circleView.frame = CGRect(origin: CGPoint(x: 20, y: 40), size: circleView.frame.size)
+        view.addSubview(circleView)
     }
 
     override func didReceiveMemoryWarning() {
