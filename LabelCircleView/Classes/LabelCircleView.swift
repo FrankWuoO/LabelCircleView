@@ -20,7 +20,15 @@ public class LabelCircleView: UIControl {
     var text: String
     var percent: Double
     var color: UIColor
-
+    
+    private var suitableFrame: CGRect {
+        var rect = bounds
+        let shortLength = min(bounds.size.width, bounds.size.height)
+        rect.size = CGSize(width: shortLength, height: shortLength)
+        rect.origin = CGPoint(x: (frame.size.width - shortLength) / 2, y: (frame.size.height - shortLength) / 2)
+        return rect
+    }
+    
     public init(appearance: Appearance = .default, text: String, percent: Double, color: UIColor) {
         self.appearance = appearance
         self.text = text
@@ -31,17 +39,35 @@ public class LabelCircleView: UIControl {
         backgroundColor = UIColor.clear
     }
 
-    @available(*, unavailable)
     required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        self.appearance = .default
+        self.text = "100"
+        self.percent = 1
+        self.color = .blue
+        super.init(coder: coder)
     }
 
-    override public func draw(_ rect: CGRect) {
+    public override func draw(_ rect: CGRect) {
         super.draw(rect)
+        
         guard let context = UIGraphicsGetCurrentContext() else { return }
         drawBackgroundArc(on: context)
         drawValueArc(on: context)
-        drawText(on: context)
+        drawText()
+    }
+    
+    public func update(text: String? = nil, percent: Double? = nil, color: UIColor? = nil) {
+        self.text = text ?? ""
+        
+        if let percent = percent {
+            self.percent = percent
+        }
+        
+        if let color = color {
+            self.color = color
+        }
+        
+        setNeedsDisplay()
     }
 }
 
@@ -51,13 +77,11 @@ extension LabelCircleView {
     }
 
     func drawBackgroundArc(on context: CGContext) {
-        let size = frame.size
-
         let startAngle = radians(-90)
         let endAngle = radians(270)
 
-        context.addArc(center: CGPoint(x: size.width / 2, y: size.height / 2),
-                       radius: size.width / 2 - appearance.arcLineWidth,
+        context.addArc(center: CGPoint(x: suitableFrame.midX, y: suitableFrame.midY),
+                       radius: suitableFrame.size.width / 2 - appearance.arcLineWidth,
                        startAngle: startAngle, endAngle: endAngle, clockwise: false)
         appearance.backgroundArcColor.setStroke()
 
@@ -68,14 +92,12 @@ extension LabelCircleView {
     }
 
     func drawValueArc(on context: CGContext) {
-        let size = frame.size
-
         let fixAngle: Double = -90
         let startAngle = radians(270)
         let endAngle = radians(360 * (1 - percent) + fixAngle)
-
-        context.addArc(center: CGPoint(x: size.width / 2, y: size.height / 2),
-                       radius: size.width / 2 - appearance.arcLineWidth,
+        
+        context.addArc(center: CGPoint(x: suitableFrame.midX, y: suitableFrame.midY),
+                       radius: suitableFrame.size.width / 2 - appearance.arcLineWidth,
                        startAngle: startAngle, endAngle: endAngle, clockwise: true)
         color.setStroke()
 
@@ -85,7 +107,7 @@ extension LabelCircleView {
         context.drawPath(using: .stroke)
     }
 
-    func drawText(on context: CGContext) {
+    func drawText() {
         let font = UIFont.systemFont(ofSize: 15, weight: .medium)
 
         let style = NSMutableParagraphStyle()
@@ -95,7 +117,8 @@ extension LabelCircleView {
                                                          .foregroundColor: UIColor.black,
                                                          .paragraphStyle: style]
 
-        let rect = CGRect(x: 0, y: bounds.size.height / 2, width: bounds.size.width, height: bounds.size.height)
-        text.draw(with: rect, options: [.usesFontLeading], attributes: attributes, context: nil)
+        var rect = suitableFrame
+        rect.origin.y = rect.midY - font.lineHeight
+        text.draw(with: rect, options: [.usesFontLeading, .usesLineFragmentOrigin], attributes: attributes, context: nil)
     }
 }
