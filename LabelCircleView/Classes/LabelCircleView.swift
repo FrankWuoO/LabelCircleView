@@ -15,11 +15,10 @@ public class LabelCircleView: UIControl {
         let arcLineWidth: CGFloat
     }
 
-    let appearance: Appearance
-
-    var text: String
-    var percent: Double
-    var color: UIColor
+    public let appearance: Appearance
+    public private(set) var text: String
+    public private(set) var percent: Double
+    public private(set) var color: UIColor
     
     private var suitableFrame: CGRect {
         var rect = bounds
